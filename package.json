@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
-    "prepare": "husky install"
+    "lint:fix": "eslint --fix ."
   },
   "keywords": [],
   "author": "",
@@ -17,8 +16,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "prettier": "^2.6.2",
-    "husky": "^8.0.0"
+    "prettier": "^2.6.2"
   },
   "type": "module"
 }
