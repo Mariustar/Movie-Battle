@@ -18,8 +18,10 @@
         "avoidEscape": true
       }
     ],
-    "no-unused-vars": ["off"],
+    "no-unused-vars": "off",
     "import/extensions": "off",
-    "allowTemplateLiterals": "off"
+    "allowTemplateLiterals": "off",
+    "no-useless-call": "off",
+    "prefer-spread": "off"
   }
 }
