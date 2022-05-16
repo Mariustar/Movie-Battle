@@ -11,29 +11,43 @@ const fetchData = async (searchTerm) => {
     },
   });
 
-  // if (response.status === 404) {
-  //   return [];
+  // if (response.status === 404 || response.status === 422) {
+  //   alert("No noneche";
   // }
   // console.log(response.status);
 
   return response.data.results;
 };
 
+const root = document.querySelector(".autocomplete");
+root.innerHTML = `
+  <label><b>Search for a Movie</b></label>
+  <input class="input" />
+  <div class="dropdown">
+    <div class="dropdown-menu">
+      <div class="dropdown-content results"></div>
+    </div>
+  </div>
+`;
+
 const input = document.querySelector("input");
+const dropdown = document.querySelector(".dropdown");
+const resultsWrapper = document.querySelector(".results");
 
 const onInput = async (e) => {
   const movies = await fetchData(e.target.value);
+
+  dropdown.classList.add("is-active");
+
   movies.forEach((movie) => {
-    const div = document.createElement("div");
-    div.innerHTML = `
+    const option = document.createElement("a");
+    option.classList.add("dropdown-item");
+    option.innerHTML = `
     <img src="https://image.tmdb.org/t/p/w300${movie.poster_path}" class="smaller">
-    <h1>${movie.original_title}</h1>
+    ${movie.original_title}
     `;
-    document.querySelector("#target").appendChild(div);
+    resultsWrapper.appendChild(option);
   });
-  if (movies.length === 0) {
-    alert("Nothing here");
-  }
 };
 
 input.addEventListener("input", debounce(onInput));
