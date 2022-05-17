@@ -1,8 +1,6 @@
 const API_KEY = "37f0afe1ca89fac4c1d8f7b18798c757";
 
-// const BASE_URL = "https://api.themoviedb.org/3/movie/";
-// const IMG_URL = "https://image.tmdb.org/t/p/original";
-
+//! Requesting the movie by search term
 const fetchData = async (searchTerm) => {
   try {
     const response = await axios.get("https://api.themoviedb.org/3/search/movie", {
@@ -21,6 +19,7 @@ const fetchData = async (searchTerm) => {
   }
 };
 
+//! Create the dropdown menu
 const root = document.querySelector(".autocomplete");
 root.innerHTML = `
   <label><b>Search for a Movie</b></label>
@@ -42,18 +41,26 @@ const onInput = async (e) => {
   resultsWrapper.innerHTML = "";
   dropdown.classList.add("is-active");
 
+  //! Show the dropdown on focus and when movies array not empty
   input.addEventListener("focus", () => {
     if (input.value !== "" && movies.length > 0) {
       dropdown.classList.add("is-active");
     }
   });
 
+  // console.log(typeof movies);
+
+  //! Close dropdown when movie array empty or wrong value entered
   if (!movies) {
     dropdown.classList.remove("is-active");
     return;
   }
+  if (!movies[0]) {
+    dropdown.classList.remove("is-active");
+  }
 
   movies.forEach((movie) => {
+    //! Create and add to html movie links (image and title)
     const option = document.createElement("a");
     const imgPosterPath = movie.poster_path;
     let imgSrc;
@@ -69,11 +76,20 @@ const onInput = async (e) => {
     ${movie.original_title}
     `;
     resultsWrapper.appendChild(option);
+
+    //! Set input text to the movie you clicked
+    option.addEventListener("mouseover", () => {
+      input.value = movie.original_title;
+      // dropdown.classList.remove("is-active");
+    });
+
+    //! Close the dropdown and display information about the movie you clicked
   });
 };
 
 input.addEventListener("input", debounce(onInput));
 
+//! Close dropdown when clicking outside of it
 document.addEventListener("click", (e) => {
   if (!root.contains(e.target)) {
     dropdown.classList.remove("is-active");
