@@ -3,15 +3,23 @@ const API_KEY = "37f0afe1ca89fac4c1d8f7b18798c757";
 // const IMG_URL = "https://image.tmdb.org/t/p/original";
 
 const fetchData = async (searchTerm) => {
-  const response = await axios.get("https://api.themoviedb.org/3/search/movie", {
-    params: {
-      api_key: "37f0afe1ca89fac4c1d8f7b18798c757",
-      query: searchTerm,
-      include_adult: false,
-    },
-  });
-  console.log(response.data.results);
-  return response.data.results;
+  try {
+    const response = await axios.get("https://api.themoviedb.org/3/search/movie", {
+      params: {
+        api_key: "37f0afe1ca89fac4c1d8f7b18798c757",
+        query: searchTerm,
+        include_adult: false,
+      },
+    });
+    if (response) {
+      return response.data.results;
+    }
+    return "Nothing here";
+  } catch (error) {
+    if (error.response.status === 422) {
+      console.log(error.toJSON);
+    }
+  }
 };
 
 const root = document.querySelector(".autocomplete");
@@ -32,12 +40,24 @@ const resultsWrapper = document.querySelector(".results");
 const onInput = async (e) => {
   const movies = await fetchData(e.target.value);
 
-  if (!movies.length) {
-    dropdown.classList.remove("is-active");
-    return;
-  }
   resultsWrapper.innerHTML = "";
   dropdown.classList.add("is-active");
+
+  input.addEventListener("click", () => {
+    if (input.value !== "") {
+      dropdown.classList.add("is-active");
+    }
+  });
+
+  input.addEventListener("input", () => {
+    if (input === document.activeElement) {
+      dropdown.classList.add("is-active");
+    } else if (!movies.length) {
+      dropdown.classList.remove("is-active");
+    } else if (input.value === "") {
+      movies.length = 0;
+    }
+  });
 
   movies.forEach((movie) => {
     const option = document.createElement("a");
@@ -49,23 +69,19 @@ const onInput = async (e) => {
     } else {
       imgSrc = `https://image.tmdb.org/t/p/w300${imgPosterPath}`;
     }
-
-    // const imgSrc = movie.poster_path === null ? "" : `https://image.tmdb.org/t/p/w300${imgSrc}`;
-
     option.classList.add("dropdown-item");
     option.innerHTML = `
     <img src="${imgSrc}">
     ${movie.original_title}
     `;
-
     resultsWrapper.appendChild(option);
   });
 };
 
 input.addEventListener("input", debounce(onInput));
 
-document.addEventListener("click", (event) => {
-  if (!root.contains(event.target)) {
+document.addEventListener("click", (e) => {
+  if (!root.contains(e.target)) {
     dropdown.classList.remove("is-active");
   }
 });
