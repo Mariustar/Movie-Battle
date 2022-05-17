@@ -23,5 +23,11 @@
     "allowTemplateLiterals": "off",
     "no-useless-call": "off",
     "prefer-spread": "off"
-  }
+  },
+  "prettier/prettier": [
+    "error",
+    {
+      "endOfLine": "auto"
+    }
+  ]
 }
