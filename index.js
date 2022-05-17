@@ -5,7 +5,7 @@ const fetchData = async (searchTerm) => {
   try {
     const response = await axios.get("https://api.themoviedb.org/3/search/movie", {
       params: {
-        api_key: "37f0afe1ca89fac4c1d8f7b18798c757",
+        api_key: API_KEY,
         query: searchTerm,
         include_adult: false,
       },
@@ -78,12 +78,37 @@ const onInput = async (e) => {
     resultsWrapper.appendChild(option);
 
     //! Set input text to the movie you clicked
-    option.addEventListener("mouseover", () => {
+    option.addEventListener("mouseup", () => {
       input.value = movie.original_title;
-      // dropdown.classList.remove("is-active");
+      dropdown.classList.remove("is-active");
     });
 
-    //! Close the dropdown and display information about the movie you clicked
+    //! Make a follow up request and get the movie information
+
+    const requestMovieInfo = async () => {
+      try {
+        const movieResponse = await axios.get(`https://api.themoviedb.org/3/movie/${movie.id}`, {
+          params: {
+            api_key: API_KEY,
+            language: "en-US",
+          },
+        });
+        return `https://www.imdb.com/title/${movieResponse.data.imdb_id}`;
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    //! Get movie information on click
+
+    // option.addEventListener("click", requestMovieInfo);
+    // const imdbLink = requestMovieInfo();
+
+    //! Close the dropdown and open a new IMDB page with the movie you clicked
+    option.addEventListener("mousedown", async () => {
+      option.setAttribute("href", `${await requestMovieInfo()}`);
+      option.setAttribute("target", "_blank");
+    });
   });
 };
 
