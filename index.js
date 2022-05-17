@@ -1,4 +1,5 @@
 const API_KEY = "37f0afe1ca89fac4c1d8f7b18798c757";
+
 // const BASE_URL = "https://api.themoviedb.org/3/movie/";
 // const IMG_URL = "https://image.tmdb.org/t/p/original";
 
@@ -16,9 +17,7 @@ const fetchData = async (searchTerm) => {
     }
     return "Nothing here";
   } catch (error) {
-    if (error.response.status === 422) {
-      console.log(error.toJSON);
-    }
+    console.log(error);
   }
 };
 
@@ -43,21 +42,16 @@ const onInput = async (e) => {
   resultsWrapper.innerHTML = "";
   dropdown.classList.add("is-active");
 
-  input.addEventListener("click", () => {
-    if (input.value !== "") {
+  input.addEventListener("focus", () => {
+    if (input.value !== "" && movies.length > 0) {
       dropdown.classList.add("is-active");
     }
   });
 
-  input.addEventListener("input", () => {
-    if (input === document.activeElement) {
-      dropdown.classList.add("is-active");
-    } else if (!movies.length) {
-      dropdown.classList.remove("is-active");
-    } else if (input.value === "") {
-      movies.length = 0;
-    }
-  });
+  if (!movies) {
+    dropdown.classList.remove("is-active");
+    return;
+  }
 
   movies.forEach((movie) => {
     const option = document.createElement("a");
