@@ -17,3 +17,5 @@ const createAutocomplete = ({ root }) => {
   const resultsWrapper = root.querySelector(".results");
   console.log(input, dropdown, resultsWrapper);
 };
+
+export { createAutocomplete };

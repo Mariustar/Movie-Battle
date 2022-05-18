@@ -11,3 +11,5 @@ const debounce = (func, delay = 450) => {
     }, delay);
   };
 };
+
+export { debounce as utils };
