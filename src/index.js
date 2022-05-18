@@ -1,10 +1,8 @@
 "use strict";
 import "regenerator-runtime/runtime";
 import axios from "axios";
-import { createAutocomplete } from "./autocomplete";
+import { autoComplete } from "./autocomplete";
 import { utils } from "./utils";
-
-console.log(axios);
 
 const API_KEY = "37f0afe1ca89fac4c1d8f7b18798c757";
 
@@ -24,17 +22,16 @@ const fetchData = async (searchTerm) => {
 };
 
 //! CREATE 3 AUTOCOMPLETE DROPDOWNS
-createAutocomplete({
+const auto1 = autoComplete({
   root: document.querySelector(".autocomplete"),
 });
-createAutocomplete({
+autoComplete({
   root: document.querySelector(".autocomplete-two"),
 });
-createAutocomplete({
+autoComplete({
   root: document.querySelector(".autocomplete-three"),
 });
 
-//! OLD CODE, REFACTORING
 // const onInput = async (e) => {
 //   const movies = await fetchData(e.target.value);
 
@@ -173,11 +170,6 @@ createAutocomplete({
 //   });
 // };
 
-// input.addEventListener("input", debounce(onInput));
+// input.addEventListener("input", utils(onInput));
 
-// //! Close dropdown when clicking outside of it
-// document.addEventListener("click", (e) => {
-//   if (!root.contains(e.target)) {
-//     dropdown.classList.remove("is-active");
-//   }
-// });
+//! Close dropdown when clicking outside of it

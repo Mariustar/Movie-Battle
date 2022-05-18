@@ -1,6 +1,6 @@
 "use strict";
 
-//! FUNCTION TO CREATE THE AUTOCOMPLETE DROPDOWN
+//! CREATE THE AUTOCOMPLETE DROPDOWN
 const createAutocomplete = ({ root }) => {
   root.innerHTML = `
   <label><b>Search for a Movie</b></label>
@@ -15,7 +15,18 @@ const createAutocomplete = ({ root }) => {
   const input = root.querySelector(".input");
   const dropdown = root.querySelector(".dropdown");
   const resultsWrapper = root.querySelector(".results");
-  console.log(input, dropdown, resultsWrapper);
+
+  // document.addEventListener("click", (e) => {
+  //   if (!root.contains(e.target))) {
+  //     dropdown.classList.remove("is-active");
+  //   };
+  // })
+
+  document.addEventListener("click", (e) => {
+    if (!root.contains(e.target)) {
+      dropdown.classList.remove("is-active");
+    }
+  });
 };
 
-export { createAutocomplete };
+export { createAutocomplete as autoComplete };
