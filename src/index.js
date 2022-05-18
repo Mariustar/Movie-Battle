@@ -1,7 +1,8 @@
+"use strict";
 import "regenerator-runtime/runtime";
 import axios from "axios";
 
-// console.log(axios);
+console.log(axios);
 
 const API_KEY = "37f0afe1ca89fac4c1d8f7b18798c757";
 

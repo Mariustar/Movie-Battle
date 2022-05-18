@@ -1,3 +1,5 @@
+"use strict";
+
 //! FUNCTION TO CREATE THE AUTOCOMPLETE DROPDOWN
 const createAutocomplete = ({ root }) => {
   root.innerHTML = `
