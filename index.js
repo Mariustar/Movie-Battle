@@ -15,7 +15,7 @@ const fetchData = async (searchTerm) => {
     }
     return "Nothing here";
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -41,23 +41,24 @@ const onInput = async (e) => {
   resultsWrapper.innerHTML = "";
   dropdown.classList.add("is-active");
 
-  //! Show the dropdown on focus and when movies array not empty
-  input.addEventListener("focus", () => {
-    if (input.value !== "" && movies.length > 0) {
-      dropdown.classList.add("is-active");
-    }
-  });
-
-  // console.log(typeof movies);
-
   //! Close dropdown when movie array empty or wrong value entered
   if (!movies) {
     dropdown.classList.remove("is-active");
+
     return;
   }
   if (!movies[0]) {
     dropdown.classList.remove("is-active");
   }
+
+  //! Show or hide dropdown
+  input.addEventListener("focus", () => {
+    if (input.value !== "" && movies.length > 0) {
+      dropdown.classList.add("is-active");
+    } else if (!movies || !movies[0]) {
+      dropdown.classList.remove("is-active");
+    }
+  });
 
   movies.forEach((movie) => {
     //! Create and add to html movie links (image and title)
@@ -73,7 +74,7 @@ const onInput = async (e) => {
     option.classList.add("dropdown-item");
     option.innerHTML = `
     <img src="${imgSrc}">
-    ${movie.original_title}
+    ${movie.original_title} - ${movie.release_date.slice(0, 4)}
     `;
     resultsWrapper.appendChild(option);
 
@@ -85,29 +86,89 @@ const onInput = async (e) => {
 
     //! Make a follow up request and get the movie information
 
-    const requestMovieInfo = async () => {
+    const onMovieClick = async () => {
       try {
-        const movieResponse = await axios.get(`https://api.themoviedb.org/3/movie/${movie.id}`, {
+        const responseMovie = await axios.get(`https://api.themoviedb.org/3/movie/${movie.id}`, {
           params: {
             api_key: API_KEY,
             language: "en-US",
           },
         });
-        return `https://www.imdb.com/title/${movieResponse.data.imdb_id}`;
+        // console.log(responseMovie.data);
+
+        document.querySelector("#summary").innerHTML = movieTemplate(responseMovie.data);
+        // return `https://www.imdb.com/title/${responseMovie.data.imdb_id}`;
       } catch (error) {
         console.log(error);
       }
     };
 
-    //! Get movie information on click
+    //! Create the template for the movie you clicked
 
-    // option.addEventListener("click", requestMovieInfo);
-    // const imdbLink = requestMovieInfo();
+    const movieTemplate = (movieDetail) => {
+      //! Get movie genres
+      const genresArr = [];
+      const getGenre = (genres) => {
+        genres.forEach((g) => {
+          genresArr.push(` ${g.name}`);
+        });
+      };
+      getGenre([...movieDetail.genres]);
+      //!--
 
-    //! Close the dropdown and open a new IMDB page with the movie you clicked
+      return `
+        <article class="media">
+          <figure class="media-left">
+            <p class="image">
+              <img src="https://image.tmdb.org/t/p/w300${imgPosterPath}">
+            </p>
+          </figure>
+          <div class="media-content">
+            <div class="content">
+              <h1>${movieDetail.original_title} - ${movieDetail.release_date.slice(0, 4)}</h1>
+              <h4>${genresArr}</h4>
+              <p>${movieDetail.overview}</p>
+            </div>
+          </div>
+        </article>
+        <article class="notification is-primary">
+          <p class="title">${movieDetail.budget.toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD",
+          })}</p>
+          <p class="subtitle">Budget</p>
+        </article>
+        <article class="notification is-primary">
+          <p class="title">${movieDetail.revenue.toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD",
+          })}</p>
+          <p class="subtitle">Box Office</p>
+        </article>
+        <article class="notification is-primary">
+          <p class="title">${movieDetail.vote_count.toLocaleString()}</p>
+          <p class="subtitle">Vote Count</p>
+        </article>
+        <article class="notification is-primary">
+          <p class="title">${movieDetail.runtime}</p>
+          <p class="subtitle">Runtime</p>
+        </article>
+        <article class="notification is-primary">
+          <p class="title">${movieDetail.vote_average}</p>
+          <p class="subtitle">Vote Average</p>
+        </article>
+        <article class="notification is-primary">
+          <p class="title">${movieDetail.release_date}</p>
+          <p class="subtitle">Release Date</p>
+        </article>
+      `;
+    };
+
+    //! Close the dropdown and get info about the clicked movie
     option.addEventListener("mousedown", async () => {
-      option.setAttribute("href", `${await requestMovieInfo()}`);
-      option.setAttribute("target", "_blank");
+      // option.setAttribute("href", `${await onMovieClick()}`);
+      // option.setAttribute("target", "_blank");
+      await onMovieClick();
     });
   });
 };
