@@ -2,3 +2,5 @@ node_modules/
 .husky/
 .prettierrc
 newrelic_agent.log
+.cache/
+dist/
