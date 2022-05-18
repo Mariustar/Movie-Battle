@@ -1,32 +1,34 @@
 import axios from "axios";
 
+console.log(axios);
+
 const API_KEY = "37f0afe1ca89fac4c1d8f7b18798c757";
 
-//! REQUESTING THE SEARCHED MOVIE
-const fetchData = async (searchTerm) => {
-  try {
-    const response = await axios.get("https://api.themoviedb.org/3/search/movie", {
-      params: {
-        api_key: API_KEY,
-        query: searchTerm,
-        include_adult: false,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-  }
-};
+// //! REQUESTING THE SEARCHED MOVIE
+// const fetchData = async (searchTerm) => {
+//   try {
+//     const response = await axios.get("https://api.themoviedb.org/3/search/movie", {
+//       params: {
+//         api_key: API_KEY,
+//         query: searchTerm,
+//         include_adult: false,
+//       },
+//     });
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
 
-//! CREATE 3 AUTOCOMPLETE DROPDOWNS
-createAutocomplete({
-  root: document.querySelector(".autocomplete"),
-});
-createAutocomplete({
-  root: document.querySelector(".autocomplete-two"),
-});
-createAutocomplete({
-  root: document.querySelector(".autocomplete-three"),
-});
+// //! CREATE 3 AUTOCOMPLETE DROPDOWNS
+// createAutocomplete({
+//   root: document.querySelector(".autocomplete"),
+// });
+// createAutocomplete({
+//   root: document.querySelector(".autocomplete-two"),
+// });
+// createAutocomplete({
+//   root: document.querySelector(".autocomplete-three"),
+// });
 
 //! OLD CODE, REFACTORING
 // const onInput = async (e) => {
