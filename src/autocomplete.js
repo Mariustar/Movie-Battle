@@ -10,9 +10,8 @@ const createAutocomplete = ({ root }) => {
   </div>
 `;
 
-  console.log(root);
-
-  // const input = root.querySelector("input");
-  // const dropdown = root.querySelector(".dropdown");
-  // const resultsWrapper = root.querySelector(".results");
+  const input = root.querySelector(".input");
+  const dropdown = root.querySelector(".dropdown");
+  const resultsWrapper = root.querySelector(".results");
+  console.log(input, dropdown, resultsWrapper);
 };

@@ -1,6 +1,8 @@
+import axios from "axios";
+
 const API_KEY = "37f0afe1ca89fac4c1d8f7b18798c757";
 
-//! Requesting the movie by search term
+//! REQUESTING THE SEARCHED MOVIE
 const fetchData = async (searchTerm) => {
   try {
     const response = await axios.get("https://api.themoviedb.org/3/search/movie", {
