@@ -3,7 +3,6 @@ import axios from "axios";
 // import { API_KEY, onMovieSelect } from "./index";
 import { debounce } from "./utils";
 
-//? Links and parameters have to be changed according to the api you are using
 //! CREATE THE AUTOCOMPLETE DROPDOWN
 const createAutocomplete = ({ root, renderOption, onOptionSelect, inputValue, fetchData }) => {
   root.innerHTML = `
