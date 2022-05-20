@@ -1,6 +1,4 @@
 "use strict";
-import axios from "axios";
-// import { API_KEY, onMovieSelect } from "./index";
 import { debounce } from "./utils";
 
 //! CREATE THE AUTOCOMPLETE DROPDOWN

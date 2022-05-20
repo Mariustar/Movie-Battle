@@ -2,13 +2,11 @@
 import "regenerator-runtime/runtime";
 import axios from "axios";
 import { autoComplete } from "./autocomplete";
-import { utils } from "./utils";
 
 export const API_KEY = "37f0afe1ca89fac4c1d8f7b18798c757";
 
 //! Create autocomplete
-autoComplete({
-  root: document.querySelector(".autocomplete"),
+const autocompleteConfig = {
   renderOption(movie) {
     const imgSrc = movie.poster_path === null ? "" : movie.poster_path;
     return `
@@ -16,11 +14,8 @@ autoComplete({
       ${movie.original_title} (${movie.release_date.slice(0, 4)})
     `;
   },
-  onOptionSelect(item) {
-    onMovieSelect(item);
-  },
-  inputValue(item) {
-    return item.original_title;
+  inputValue(movie) {
+    return movie.original_title;
   },
   async fetchData(searchTerm) {
     try {
@@ -36,16 +31,34 @@ autoComplete({
       console.error(error);
     }
   },
+};
+
+autoComplete({
+  ...autocompleteConfig,
+  root: document.querySelector("#left-autocomplete"),
+  onOptionSelect(movie) {
+    onMovieSelect(movie, document.querySelector(`#left-summary`));
+  },
 });
 
-export const onMovieSelect = async (movie) => {
+autoComplete({
+  ...autocompleteConfig,
+  root: document.querySelector("#right-autocomplete"),
+  onOptionSelect(movie) {
+    onMovieSelect(movie, document.querySelector(`#right-summary`));
+  },
+});
+
+//! Follow up request for the movie id and inserting the html in the html file
+const onMovieSelect = async (movie, summaryElement) => {
   try {
     const response = await axios.get(`https://api.themoviedb.org/3/movie/${movie.id}`, {
       params: {
         api_key: API_KEY,
       },
     });
-    document.querySelector("#summary").innerHTML = movieTemplate(response.data);
+    summaryElement.innerHTML = movieTemplate(response.data);
+    document.querySelector(".tutorial").classList.add("is-hidden");
     movieDetail();
   } catch (error) {
     console.log(error);
