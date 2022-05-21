@@ -3,6 +3,7 @@ import { debounce } from "./utils";
 
 //! CREATE THE AUTOCOMPLETE DROPDOWN
 const createAutocomplete = ({ root, renderOption, onOptionSelect, inputValue, fetchData }) => {
+  // adds to html the basic html tag structure with bulma.css classes for the dropdown
   root.innerHTML = `
   <label><b>Search for a Movie</b></label>
   <input class="input" />
@@ -17,6 +18,7 @@ const createAutocomplete = ({ root, renderOption, onOptionSelect, inputValue, fe
   const dropdown = root.querySelector(".dropdown");
   const resultsWrapper = root.querySelector(".results");
 
+  //! All the fucntionality to the input element
   const onInput = async (e) => {
     const itemList = await fetchData(e.target.value);
     resultsWrapper.innerHTML = "";
@@ -67,4 +69,4 @@ const createAutocomplete = ({ root, renderOption, onOptionSelect, inputValue, fe
   });
 };
 
-export { createAutocomplete as autoComplete };
+export { createAutocomplete as createAutocomplete };

@@ -11,7 +11,7 @@ figure.image {
 }
 
 figure .image img {
-  width: 128px;
+  width: 10rem;
 }
 
 .notification {
@@ -47,12 +47,15 @@ figure .image img {
   margin-right: 10px;
 }
 
-/* .smaller {
-  width: 100px;
+.media .media-content p {
+  height: 6.4rem;
+  overflow-y: scroll;
 }
 
-.flexer {
-  display: flex;
-  flex-direction: row;
-  width: 202px;
-} */
+.media .media-content h1 {
+  height: 5rem;
+  margin-bottom: 0;
+}
+.media .media-content h4 {
+  height: 3rem;
+}

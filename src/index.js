@@ -1,12 +1,14 @@
 "use strict";
 import "regenerator-runtime/runtime";
 import axios from "axios";
-import { autoComplete } from "./autocomplete";
+import { createAutocomplete } from "./autocomplete";
 
 export const API_KEY = "37f0afe1ca89fac4c1d8f7b18798c757";
 
 //! Create autocomplete
+// a simple object which has 3 functions/methods inside
 const autocompleteConfig = {
+  // first method renders the html on the page for every movie in the dropdown menu
   renderOption(movie) {
     const imgSrc = movie.poster_path === null ? "" : movie.poster_path;
     return `
@@ -14,9 +16,12 @@ const autocompleteConfig = {
       ${movie.original_title} (${movie.release_date.slice(0, 4)})
     `;
   },
+  // second method gets the movie title
   inputValue(movie) {
     return movie.original_title;
   },
+
+  // third method, make a request to the api and return an array
   async fetchData(searchTerm) {
     try {
       const response = await axios.get("https://api.themoviedb.org/3/search/movie", {
@@ -33,7 +38,7 @@ const autocompleteConfig = {
   },
 };
 
-autoComplete({
+createAutocomplete({
   ...autocompleteConfig,
   root: document.querySelector("#left-autocomplete"),
   onOptionSelect(movie) {
@@ -41,7 +46,7 @@ autoComplete({
   },
 });
 
-autoComplete({
+createAutocomplete({
   ...autocompleteConfig,
   root: document.querySelector("#right-autocomplete"),
   onOptionSelect(movie) {
@@ -59,15 +64,52 @@ const onMovieSelect = async (movie, summaryElement) => {
     });
     summaryElement.innerHTML = movieTemplate(response.data);
     document.querySelector(".tutorial").classList.add("is-hidden");
-    movieDetail();
+
+    const linkArr = await getYoutubeLink(movie);
+    const links = [];
+    // for (let i = 0; i <= linkArr.length; i += 1) {
+    //   if (linkArr[i]["name"].includes("Trailer")) {
+    //     links.push(linkArr[i]["key"]);
+    //   }
+    // }
+
+    for await (let l of linkArr) {
+      if (l.name.includes("Trailer")) {
+        links.push(l.key);
+      }
+    }
+    document
+      .querySelector(".media-left")
+      .insertAdjacentHTML(
+        "beforeend",
+        `<a href="https://www.youtube.com/watch?v=${links[0]}" target="_blank"> TRAILER </a>`,
+      );
+
+    // document
+    //   .querySelector(".content")
+    //   .insertAdjacentHTML(
+    //     "afterbegin",
+    //     `<a href="https://www.youtube.com/watch?v=${link}"> TRAILER </a>`,
+    //   );
   } catch (error) {
     console.log(error);
   }
 };
 
-// autoComplete({
-//   root: document.querySelector(".autocomplete-two"),
-// });
+const getYoutubeLink = async (movie) => {
+  try {
+    const response = await axios.get(`https://api.themoviedb.org/3/movie/${movie.id}/videos`, {
+      params: {
+        api_key: API_KEY,
+        language: "en-US",
+      },
+    });
+    const result = response.data.results;
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const movieTemplate = (movieDetail) => {
   //! Get movie genres
@@ -84,7 +126,11 @@ const movieTemplate = (movieDetail) => {
       <article class="media">
         <figure class="media-left">
           <p class="image">
-            <img src="https://image.tmdb.org/t/p/w300${movieDetail.poster_path}">
+            <a href="https://www.imdb.com/title/${
+              movieDetail.imdb_id
+            }" target="_blank"><img src="https://image.tmdb.org/t/p/w300${
+    movieDetail.poster_path
+  }"></a>
           </p>
         </figure>
         <div class="media-content">
@@ -130,8 +176,13 @@ const movieTemplate = (movieDetail) => {
 
 //! Close the dropdown and get info about the clicked movie
 
-const movieDetail = async () => {
-  await document.querySelector(".dropdown-item").addEventListener("mousedown", async () => {
-    await onMovieSelect();
-  });
-};
+// const movieDetail = async () => {
+//   await document.querySelector(".dropdown-item").addEventListener("mousedown", async () => {
+//     await onMovieSelect();
+//   });
+// };
+// const linkDetail = async () => {
+//   await document.querySelector(".dropdown-item").addEventListener("mousedown", async () => {
+//     await getYoutubeLink();
+//   });
+// };
