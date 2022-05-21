@@ -42,7 +42,7 @@ createAutocomplete({
   ...autocompleteConfig,
   root: document.querySelector("#left-autocomplete"),
   onOptionSelect(movie) {
-    onMovieSelect(movie, document.querySelector(`#left-summary`));
+    onMovieSelect(movie, document.querySelector(`#left-summary`), "left");
   },
 });
 
@@ -50,12 +50,12 @@ createAutocomplete({
   ...autocompleteConfig,
   root: document.querySelector("#right-autocomplete"),
   onOptionSelect(movie) {
-    onMovieSelect(movie, document.querySelector(`#right-summary`));
+    onMovieSelect(movie, document.querySelector(`#right-summary`), "right");
   },
 });
 
 //! Follow up request for the movie id and inserting the html in the html file
-const onMovieSelect = async (movie, summaryElement) => {
+const onMovieSelect = async (movie, summaryElement, side) => {
   try {
     const response = await axios.get(`https://api.themoviedb.org/3/movie/${movie.id}`, {
       params: {
@@ -67,30 +67,33 @@ const onMovieSelect = async (movie, summaryElement) => {
 
     const linkArr = await getYoutubeLink(movie);
     const links = [];
-    // for (let i = 0; i <= linkArr.length; i += 1) {
-    //   if (linkArr[i]["name"].includes("Trailer")) {
-    //     links.push(linkArr[i]["key"]);
-    //   }
-    // }
 
     for await (let l of linkArr) {
       if (l.name.includes("Trailer")) {
         links.push(l.key);
+        if (side === "left") {
+          console.log("left");
+        } else if (side === "right") {
+          console.log("rigth");
+        }
       }
     }
-    document
-      .querySelector(".media-left")
-      .insertAdjacentHTML(
-        "beforeend",
-        `<a href="https://www.youtube.com/watch?v=${links[0]}" target="_blank"> TRAILER </a>`,
-      );
-
-    // document
-    //   .querySelector(".content")
-    //   .insertAdjacentHTML(
-    //     "afterbegin",
-    //     `<a href="https://www.youtube.com/watch?v=${link}"> TRAILER </a>`,
-    //   );
+    if (side === "left") {
+      document
+        .querySelector("#left-summary")
+        .insertAdjacentHTML(
+          "afterbegin",
+          `<a href="https://www.youtube.com/watch?v=${links[0]}" class="trailer" target="_blank"> TRAILER </a>`,
+        );
+    }
+    if (side === "right") {
+      document
+        .querySelector("#right-summary")
+        .insertAdjacentHTML(
+          "afterbegin",
+          `<a href="https://www.youtube.com/watch?v=${links[0]}" class="trailer" target="_blank"> TRAILER </a>`,
+        );
+    }
   } catch (error) {
     console.log(error);
   }
@@ -173,16 +176,3 @@ const movieTemplate = (movieDetail) => {
       </article>
     `;
 };
-
-//! Close the dropdown and get info about the clicked movie
-
-// const movieDetail = async () => {
-//   await document.querySelector(".dropdown-item").addEventListener("mousedown", async () => {
-//     await onMovieSelect();
-//   });
-// };
-// const linkDetail = async () => {
-//   await document.querySelector(".dropdown-item").addEventListener("mousedown", async () => {
-//     await getYoutubeLink();
-//   });
-// };

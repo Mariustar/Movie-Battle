@@ -59,3 +59,29 @@ figure .image img {
 .media .media-content h4 {
   height: 3rem;
 }
+
+#left-summary a,
+#right-summary a {
+  display: inline;
+  margin: 0 auto;
+  font-size: 1.3rem;
+  letter-spacing: 0.4rem;
+  font-weight: 600;
+  color: black;
+  margin-top: 0.2rem;
+}
+
+#left-summary a:hover,
+#left-summary a:active,
+#right-summary a:hover,
+#right-summary a:active {
+  text-decoration: none;
+  color: darkorange;
+}
+
+#left-summary a:link,
+#left-summary a:visited,
+#right-summary a:link,
+#right-summary a:visited {
+  text-decoration: none;
+}
