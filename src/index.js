@@ -54,6 +54,9 @@ createAutocomplete({
   },
 });
 
+let movieLeft;
+let movieRight;
+
 //! Follow up request for the movie id and inserting the html in the html file
 const onMovieSelect = async (movie, summaryElement, side) => {
   try {
@@ -71,22 +74,18 @@ const onMovieSelect = async (movie, summaryElement, side) => {
     for await (let l of linkArr) {
       if (l.name.includes("Trailer")) {
         links.push(l.key);
-        if (side === "left") {
-          console.log("left");
-        } else if (side === "right") {
-          console.log("rigth");
-        }
       }
     }
     if (side === "left") {
+      movieLeft = response.data;
       document
         .querySelector("#left-summary")
         .insertAdjacentHTML(
           "afterbegin",
           `<a href="https://www.youtube.com/watch?v=${links[0]}" class="trailer" target="_blank"> TRAILER </a>`,
         );
-    }
-    if (side === "right") {
+    } else if (side === "right") {
+      movieRight = response.data;
       document
         .querySelector("#right-summary")
         .insertAdjacentHTML(
@@ -94,9 +93,35 @@ const onMovieSelect = async (movie, summaryElement, side) => {
           `<a href="https://www.youtube.com/watch?v=${links[0]}" class="trailer" target="_blank"> TRAILER </a>`,
         );
     }
+
+    if (movieLeft && movieRight) {
+      runComparison();
+    }
   } catch (error) {
     console.log(error);
   }
+};
+
+const runComparison = () => {
+  const leftSideStats = document.querySelectorAll("#left-summary .notification");
+  const rightSideStats = document.querySelectorAll("#right-summary .notification");
+
+  leftSideStats.forEach((leftStat, index) => {
+    const rightStat = rightSideStats[index];
+
+    const leftSideValue = leftStat.dataset.value;
+    const rightSideValue = rightStat.dataset.value;
+
+    if (leftSideValue < rightSideValue) {
+      leftStat.classList.remove("is-primary");
+      leftStat.classList.add("is-danger");
+    } else if (leftSideValue > rightSideValue) {
+      rightStat.classList.remove("is-primary");
+      rightStat.classList.add("is-danger");
+    } else {
+      rightStat.classList.remove("");
+    }
+  });
 };
 
 const getYoutubeLink = async (movie) => {
@@ -144,33 +169,33 @@ const movieTemplate = (movieDetail) => {
           </div>
         </div>
       </article>
-      <article class="notification is-primary">
+      <article data-value="${movieDetail.vote_average}" class="notification is-primary">
+        <p class="title">${movieDetail.vote_average}</p>
+        <p class="subtitle">Vote Average</p>
+      </article>
+      <article data-value="${movieDetail.budget}" class="notification is-primary">
         <p class="title">${movieDetail.budget.toLocaleString("en-US", {
           style: "currency",
           currency: "USD",
         })}</p>
         <p class="subtitle">Budget</p>
       </article>
-      <article class="notification is-primary">
+      <article data-value="${movieDetail.revenue}" class="notification is-primary">
         <p class="title">${movieDetail.revenue.toLocaleString("en-US", {
           style: "currency",
           currency: "USD",
         })}</p>
         <p class="subtitle">Box Office</p>
       </article>
-      <article class="notification is-primary">
+      <article data-value="${movieDetail.vote_count}" class="notification is-primary">
         <p class="title">${movieDetail.vote_count.toLocaleString()}</p>
         <p class="subtitle">Vote Count</p>
       </article>
-      <article class="notification is-primary">
+      <article data-value="${movieDetail.runtime}" class="notification is-primary">
         <p class="title">${movieDetail.runtime}</p>
         <p class="subtitle">Runtime</p>
       </article>
-      <article class="notification is-primary">
-        <p class="title">${movieDetail.vote_average}</p>
-        <p class="subtitle">Vote Average</p>
-      </article>
-      <article class="notification is-primary">
+      <article class="notification is-warning">
         <p class="title">${movieDetail.release_date}</p>
         <p class="subtitle">Release Date</p>
       </article>
