@@ -6,9 +6,7 @@ import { createAutocomplete } from "./autocomplete";
 export const API_KEY = "37f0afe1ca89fac4c1d8f7b18798c757";
 
 //! Create autocomplete
-// a simple object which has 3 functions/methods inside
 const autocompleteConfig = {
-  // first method renders the html on the page for every movie in the dropdown menu
   renderOption(movie) {
     const imgSrc = movie.poster_path === null ? "" : movie.poster_path;
     return `
@@ -16,12 +14,10 @@ const autocompleteConfig = {
       ${movie.original_title} (${movie.release_date.slice(0, 4)})
     `;
   },
-  // second method gets the movie title
   inputValue(movie) {
     return movie.original_title;
   },
 
-  // third method, make a request to the api and return an array
   async fetchData(searchTerm) {
     try {
       const response = await axios.get("https://api.themoviedb.org/3/search/movie", {
@@ -102,6 +98,7 @@ const onMovieSelect = async (movie, summaryElement, side) => {
   }
 };
 
+//! Compare the two movie's stats and color them according to which is higher
 const runComparison = () => {
   const leftSideStats = document.querySelectorAll("#left-summary .notification");
   const rightSideStats = document.querySelectorAll("#right-summary .notification");
@@ -109,7 +106,9 @@ const runComparison = () => {
   leftSideStats.forEach((leftStat, index) => {
     const rightStat = rightSideStats[index];
 
+    // @ts-ignore
     const leftSideValue = leftStat.dataset.value;
+    // @ts-ignore
     const rightSideValue = rightStat.dataset.value;
 
     if (leftSideValue < rightSideValue) {
@@ -129,6 +128,7 @@ const runComparison = () => {
   });
 };
 
+//! Requests the youtube link
 const getYoutubeLink = async (movie) => {
   try {
     const response = await axios.get(`https://api.themoviedb.org/3/movie/${movie.id}/videos`, {
