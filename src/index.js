@@ -107,9 +107,14 @@ const runComparison = () => {
     const rightStat = rightSideStats[index];
 
     // @ts-ignore
-    const leftSideValue = leftStat.dataset.value;
+    const leftSideValue = Number(leftStat.dataset.value);
     // @ts-ignore
-    const rightSideValue = rightStat.dataset.value;
+    const rightSideValue = Number(rightStat.dataset.value);
+
+    // console.log(leftSideStats);
+    // console.log(leftSideValue);
+    // console.log(rightSideValue);
+    // console.log(leftStat);
 
     if (leftSideValue < rightSideValue) {
       rightStat.classList.remove("is-warning", "is-danger");
@@ -122,6 +127,8 @@ const runComparison = () => {
       leftStat.classList.add("is-primary");
       rightStat.classList.add("is-danger");
     } else {
+      rightStat.classList.remove("is-primary", "is-danger");
+      leftStat.classList.remove("is-primary", "is-danger");
       rightStat.classList.add("is-warning");
       leftStat.classList.add("is-warning");
     }
@@ -200,9 +207,6 @@ const movieTemplate = (movieDetail) => {
         <p class="title">${movieDetail.runtime}</p>
         <p class="subtitle">Runtime</p>
       </article>
-      <article class="notification is-warning">
-        <p class="title">${movieDetail.release_date}</p>
-        <p class="subtitle">Release Date</p>
-      </article>
+
     `;
 };
